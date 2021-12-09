@@ -1,0 +1,156 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@500&display=swap");
+
+.loginWrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F4F1DE;
+}
+
+main.panel {
+  max-width: 900px;
+  width: 90vw;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 2px 5px -6px #697a79, 0 0 30px -50px #697a79;
+  display: flex;
+}
+
+main.panel .panel__half {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 2;
+  padding: 2rem 1rem;
+}
+
+main.panel h2 {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.9rem;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
+
+main.panel p {
+  font-family: "Outfit", sans-serif;
+  margin: 0.5rem 0 2rem;
+  max-width: 25ch;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  font-weight: 300;
+  text-align: center;
+}
+
+main.panel button {
+  color: inherit;
+  font-family: "Outfit", sans-serif;
+}
+
+main.panel form {
+  display: flex;
+  flex-direction: column;
+}
+
+main.panel form input {
+  margin: 0.5rem 0;
+  width: 200px;
+  border-radius: 50px;
+  padding: 1rem 0.75rem;
+  background: #f0f4f3;
+  border: none;
+  color: inherit;
+  font-family: "Outfit", sans-serif;
+}
+
+main.panel form input::placeholder {
+  opacity: 0.8;
+}
+
+main.panel #submitButton,
+main.panel #signupButton {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 50px;
+  padding: 0.85rem 2.75rem;
+  margin: 2rem 0;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+}
+
+.panel__half.half--first {
+  flex-grow: 2;
+  border-radius: inherit;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.panel__half.half--first #submitButton {
+  background: #E07A5F;
+  color: white;
+}
+
+.panel__half.half--first #submitButton:hover {
+  background-color: #eea38e;
+  cursor: pointer;
+}
+
+.panel__half.half--second {
+  background: white;
+  color: #E07A5F;
+}
+
+.panel__half.half--second #signupButton:hover {
+  background-color: #eea38e;
+  cursor: pointer;
+}
+
+.panel__half.half--second {
+  background: #E07A5F;
+  color: white;
+  padding: 2rem;
+  flex-grow: 1;
+  border-radius: inherit;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.homeTitle h1 {
+  font-size: 300%;
+  font-family: "Open Sans", sans-serif;
+  text-transform: uppercase;
+}
+
+.homeButtons button {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 50px;
+  padding: 0.85rem 2.75rem;
+  margin: 2rem;
+  text-transform: uppercase;
+  font-family: "Open Sans", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  background-color: #E07A5F;
+  color: #fff;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+.homeButtons button:hover {
+  background-color: #eea38e;
+  cursor: pointer;
+}
+
+@media (max-width: 650px) {
+  main.panel {
+    flex-direction: column;
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+}
