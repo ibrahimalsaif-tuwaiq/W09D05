@@ -1,11 +1,19 @@
-import React, { Component } from 'react'
+import React from "react";
+import { Route, Routes } from "react-router-dom";
+import Signup from "./components/Signup";
+import Login from "./components/Login";
+import "./App.css";
+require("dotenv").config();
 
-export default class App extends Component {
-  render() {
-    return (
-      <div>
-        <h1>your clean react code</h1>
-      </div>
-    )
-  }
-}
+const App = () => {
+  return (
+    <>
+      <Routes>
+        <Route exact path="/signup" element={<Signup />} />
+        <Route exact path="/login" element={<Login />} />
+      </Routes>
+    </>
+  );
+};
+
+export default App;
