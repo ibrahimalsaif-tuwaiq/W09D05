@@ -27,7 +27,7 @@ const Signup = () => {
       role: process.env.REACT_APP_USER_ROLE,
     });
     if (res.status === 201) {
-      navigate("/login");
+      navigate("/verify_from_email");
     } else {
       setMessage(res.data.message);
     }

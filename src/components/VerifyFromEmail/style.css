@@ -1,0 +1,29 @@
+.verifyFromEmailWrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f1de;
+}
+
+.verifyBox {
+  height: 50%;
+  width: 50%;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #E07A5F;
+  color: white;
+}
+
+.verifyBox h1 {
+  font-size: 300%;
+  font-family: "Outfit", sans-serif;
+}
+
+.verifyBox p {
+  font-size: 200%;
+  font-family: "Outfit", sans-serif;
+}
