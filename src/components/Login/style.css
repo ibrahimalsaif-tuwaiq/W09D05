@@ -115,6 +115,11 @@ main.panel #signupButton {
   border-bottom-left-radius: 0;
 }
 
+.forgotPassword:hover {
+  color: #4c8bf5;
+  cursor: pointer;
+}
+
 .login-with-google-btn {
   transition: background-color 0.3s, box-shadow 0.3s;
   padding: 12px 16px 12px 42px;

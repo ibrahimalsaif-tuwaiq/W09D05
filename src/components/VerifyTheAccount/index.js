@@ -16,7 +16,7 @@ const VerifyTheAccount = () => {
   const verifyAccount = async () => {
     if (code.length > 0) {
       try {
-        const res = await axios.post(
+        await axios.post(
           `${process.env.REACT_APP_BASE_URL}/verify_account`,
           {
             id,
