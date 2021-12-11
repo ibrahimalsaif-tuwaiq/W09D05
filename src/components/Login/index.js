@@ -31,7 +31,11 @@ const Login = () => {
         password: password,
       });
       dispatch(
-        userLogin({ role: res.data.result.role.role, token: res.data.token })
+        userLogin({
+          role: res.data.result.role.role,
+          token: res.data.token,
+          user: res.data.result,
+        })
       );
       navigate("/");
     } catch (error) {
@@ -52,6 +56,7 @@ const Login = () => {
             userLogin({
               role: user.result.role.role,
               token: user.token,
+              user: user.result,
             })
           );
           navigate("/");
@@ -73,7 +78,7 @@ const Login = () => {
 
     if (email) {
       try {
-        const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/check_email`, {
+        await axios.post(`${process.env.REACT_APP_BASE_URL}/check_email`, {
           email,
         });
         MySwal.fire({
