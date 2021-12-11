@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -9,6 +10,7 @@ import "./style.css";
 const MySwal = withReactContent(Swal);
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
   const state = useSelector((state) => {
@@ -98,7 +100,15 @@ const Dashboard = () => {
           </div>
         </>
       ) : (
-        ""
+        <div className="centerWrapper">
+        <div className="signupLoginTitle">
+          <h1>YOU HAVE TO LOGIN FIRST</h1>
+        </div>
+        <div className="signupLoginButtons">
+          <button onClick={() => navigate("/login")}>Login</button>
+          <button onClick={() => navigate("/signup")}>Signup</button>
+        </div>
+      </div>
       )}
     </>
   );

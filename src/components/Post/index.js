@@ -494,7 +494,15 @@ const Post = () => {
           )}
         </>
       ) : (
-        ""
+        <div className="centerWrapper">
+          <div className="signupLoginTitle">
+            <h1>YOU HAVE TO LOGIN FIRST</h1>
+          </div>
+          <div className="signupLoginButtons">
+            <button onClick={() => navigate("/login")}>Login</button>
+            <button onClick={() => navigate("/signup")}>Signup</button>
+          </div>
+        </div>
       )}
     </>
   );
