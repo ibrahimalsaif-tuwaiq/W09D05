@@ -1,0 +1,57 @@
+body {
+  background: #e6ecf0;
+  font-family: "Asap", sans-serif;
+  font-family: "Roboto", sans-serif;
+}
+
+.dashboardWrapper {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ItemsCon {
+  width: 60%;
+  padding: 2rem 1rem;
+  border-radius: 1.75rem;
+  background-color: #fafaee;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  border: 0.2rem black solid;
+}
+
+.list {
+  width: 80%;
+  height: 50%;
+  list-style: none;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.3rem;
+}
+
+.listItem li {
+  font-size: 120%;
+  font-family: "Josefin Sans", sans-serif;
+}
+
+.listItem button {
+  padding: 0.3rem;
+  margin: 0 0.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  color: white;
+}
+
+.listItem .delete {
+  background-color: crimson;
+}
+.listItem .delete:hover {
+  background-color: rgb(143, 0, 29);
+  cursor: pointer;
+}
