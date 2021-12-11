@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./style.css";
 
+const popupTools = require("popup-tools");
+
 const Login = () => {
   const navigate = useNavigate();
   const [identifier, setIdentifier] = useState("");
@@ -17,19 +19,39 @@ const Login = () => {
 
   const login = async () => {
     setMessage("");
-    const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
-      identifier: identifier,
-      password: password,
-    });
-    if (res.status === 200) {
-    //   localStorage.setItem(
-    //     "user",
-    //     JSON.stringify({ id: res.data._id, username: res.data.username })
+    try {
+      const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/login`, {
+        identifier: identifier,
+        password: password,
+      });
+    //   dispatch(
+    //     userLogin({ role: res.data.result.role.role, token: res.data.token })
     //   );
-    //   navigate("/home");
-    } else {
-      setMessage(res.data);
+      navigate("/");
+    } catch (error) {
+      setMessage(error.response.data.message);
     }
+  };
+
+  const googleLogin = () => {
+    popupTools.popup(
+      `${process.env.REACT_APP_BASE_URL}/auth/google`,
+      "Google Login",
+      { width: 400, height: 600 },
+      function (err, user) {
+        if (err) {
+          console.log(err);
+        } else {
+        //   dispatch(
+        //     userLogin({
+        //       role: user.result.role.role,
+        //       token: user.token,
+        //     })
+        //   );
+          navigate("/");
+        }
+      }
+    );
   };
 
   return (
@@ -38,7 +60,7 @@ const Login = () => {
         <>
           <div className="centerWrapper">
             <div className="homeTitle">
-              <h1>You already loggedin, you don't need to login</h1>
+              <p>You already loggedin, you don't need to login</p>
             </div>
             <div className="homeButtons">
               <button onClick={() => navigate("/home")}>home</button>
@@ -71,6 +93,13 @@ const Login = () => {
               />
               <input id="submitButton" type="submit" value="Submit" />
             </form>
+            <button
+              type="button"
+              className="login-with-google-btn"
+              onClick={googleLogin}
+            >
+              Or Sign in with Google
+            </button>
           </div>
           <div className="panel__half half--second">
             <h2>Hello, friend!</h2>
