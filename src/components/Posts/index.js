@@ -20,7 +20,6 @@ const Posts = () => {
   const state = useSelector((state) => {
     return {
       token: state.Login.token,
-      user: state.Login.user,
     };
   });
 
@@ -99,7 +98,7 @@ const Posts = () => {
       reverseButtons: true,
     });
 
-    setDescription(text);
+    if (text) setDescription(text);
   };
 
   const addPost = async () => {

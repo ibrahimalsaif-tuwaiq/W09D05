@@ -6,7 +6,7 @@ body {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(30rem, 1fr));
   margin: 0 auto;
   max-width: 85%;
   padding: 1.8rem 1.7rem;
@@ -52,6 +52,8 @@ body {
 }
 
 .card-header-info p {
+  overflow-wrap: break-word;
+  word-break: break-all; 
   font-weight: normal;
   margin-top: 5px;
   overflow: hidden;
@@ -72,6 +74,7 @@ body {
   background: none;
   border: none;
   border-radius: 50px;
+  margin-top: 0.5rem;
   padding: 0.2rem 0.5rem;
   text-transform: uppercase;
   font-family: "Open Sans", sans-serif;
