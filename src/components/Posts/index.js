@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { AiOutlinePlus } from "react-icons/ai";
 import Navbar from "./../Navbar";
+import { storage } from "./../firebase";
 import "./style.css";
 
+const MySwal = withReactContent(Swal);
+
 const Posts = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+  const [url, setUrl] = useState("");
+  const [description, setDescription] = useState("");
 
   const state = useSelector((state) => {
     return {
@@ -14,33 +24,138 @@ const Posts = () => {
     };
   });
 
+  useEffect(() => {
+    getPosts();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (description.trim().length > 0) {
+      addPost();
+      setUrl("");
+      setDescription("");
+    }
+    // eslint-disable-next-line
+  }, [description]);
+
+  const getPosts = async () => {
+    const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/posts`, {
+      headers: {
+        Authorization: `Bearer ${state.token}`,
+      },
+    });
+    setPosts(res.data);
+  };
+
+  const handleUpload = (image) => {
+    const uploadTask = storage.ref(`images/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            setUrl(url);
+          });
+      }
+    );
+  };
+
+  const getPostData = async () => {
+    const { value: file } = await MySwal.fire({
+      title: "Add New Post",
+      input: "file",
+      inputLabel: "Chose your image or skip if you don't want an image",
+      showCancelButton: true,
+      confirmButtonText: "Next",
+      confirmButtonColor: "#E07A5F",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+      inputAttributes: {
+        accept: "image/*",
+        "aria-label": "Upload your image",
+      },
+    });
+
+    if (file) handleUpload(file);
+
+    const { value: text } = await MySwal.fire({
+      title: "Add New Post",
+      input: "textarea",
+      inputPlaceholder: "Type your description here...",
+      inputAttributes: {
+        "aria-label": "Type your description here",
+      },
+      showCancelButton: true,
+      confirmButtonText: "Post",
+      confirmButtonColor: "#E07A5F",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    setDescription(text);
+  };
+
+  const addPost = async () => {
+    await axios.post(
+      `${process.env.REACT_APP_BASE_URL}/posts`,
+      {
+        image: url,
+        description: description,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      }
+    );
+    getPosts();
+  };
+
   return (
-    <div>
+    <>
       {state.token ? (
         <>
           <Navbar />
-          <div>
-            <div className="tweet-wrap">
-              <div className="tweet-header">
-                <img src="https://pbs.twimg.com/profile_images/1012717264108318722/9lP-d2yM_400x400.jpg" alt="" className="avator" />
-                <div className="tweet-header-info">
-                  Steve Schoger
-                  <p>
-                    🔥 If you're tired of using outline styles for secondary
-                    buttons, a soft solid background based on the text color can
-                    be a great alternative.
-                  </p>
+          <div className="cards">
+            {posts.map((post) => {
+              return (
+                <div className="card-wrap" key={post.post._id}>
+                  <div className="card-header">
+                    <img
+                      src={post.post.createdBy.avatar}
+                      alt={`${post.post.createdBy.username} avatar`}
+                      className="avatar"
+                    />
+                    <div className="card-header-info">
+                      {post.post.createdBy.username}
+                      <p>{post.post.description}</p>
+                    </div>
+                  </div>
+                  <button
+                    className="viewButton"
+                    onClick={() => navigate(`/posts/${post.post._id}`)}
+                  >
+                    VIEW
+                  </button>
                 </div>
-              </div>
-
-              <div className="tweet-info-counts"></div>
-            </div>
+              );
+            })}
           </div>
+          <button id="fixedbutton" onClick={getPostData}>
+            <AiOutlinePlus />
+          </button>
         </>
       ) : (
         ""
       )}
-    </div>
+    </>
   );
 };
 

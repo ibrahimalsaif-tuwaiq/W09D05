@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -19,6 +21,8 @@ import { BiLogOut } from "react-icons/bi";
 import { AiFillHome } from "react-icons/ai";
 import { userLogout } from "./../../reducers/Login";
 import "./style.css";
+
+const MySwal = withReactContent(Swal);
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -56,13 +60,40 @@ const Navbar = () => {
   };
 
   const deleteAccount = async () => {
-    await axios.delete(`${process.env.REACT_APP_BASE_URL}/deleteAccount`, {
-      headers: {
-        Authorization: `Bearer ${state.token}`,
-      },
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      iconColor: "#D11A2A",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      confirmButtonColor: "#D11A2A",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await axios.delete(`${process.env.REACT_APP_BASE_URL}/deleteAccount`, {
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        MySwal.fire({
+          title: "Deleted!",
+          icon: "success",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#E07A5F",
+        });
+        signout();
+        navigate("/");
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        MySwal.fire({
+          title: "Cancelled",
+          icon: "error",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#E07A5F",
+        });
+      }
     });
-    signout();
-    navigate("/");
   };
 
   return (

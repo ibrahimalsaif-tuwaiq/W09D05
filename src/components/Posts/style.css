@@ -3,17 +3,29 @@ body {
   font-family: "Asap", sans-serif;
   font-family: "Roboto", sans-serif;
 }
-img {
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+  margin: 0 auto;
+  max-width: 85%;
+  padding: 1.8rem 1.7rem;
+  grid-gap: 1.9rem;
+  align-items: stretch;
+}
+
+.cards img {
   max-width: 100%;
 }
-.avator {
+
+.cards .avatar {
   border-radius: 100px;
   width: 48px;
   margin-right: 15px;
 }
 
-.tweet-wrap {
-  max-width: 490px;
+.cards .card-wrap {
+  width: 490px;
   background: #fff;
   margin: 0 auto;
   margin-top: 50px;
@@ -23,62 +35,91 @@ img {
   border-top: 1px solid #e6ecf0;
 }
 
-.tweet-header {
+.card-header {
   display: flex;
   align-items: flex-start;
   font-size: 14px;
 }
-.tweet-header-info {
+
+.card-header-info {
   font-weight: bold;
 }
-.tweet-header-info span {
+
+.card-header-info span {
   color: #657786;
   font-weight: normal;
   margin-left: 5px;
 }
-.tweet-header-info p {
+
+.card-header-info p {
   font-weight: normal;
   margin-top: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-height: X;
+  max-height: X * 3;
 }
-.tweet-img-wrap {
+
+.card-img-wrap {
   padding-left: 60px;
 }
 
-.tweet-info-counts {
+.viewButton {
+  float: right;
+  background: none;
+  border: none;
+  border-radius: 50px;
+  padding: 0.2rem 0.5rem;
+  text-transform: uppercase;
+  font-family: "Open Sans", sans-serif;
+  letter-spacing: 0.1rem;
+  background-color: #e07a5f;
+  color: white;
+  font-weight: bold;
+}
+
+.viewButton:hover {
+  background-color: #e09d8a;
+  cursor: pointer;
+}
+
+#fixedbutton {
+  position: fixed;
   display: flex;
-  margin-left: 60px;
-  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  bottom: 1rem;
+  right: 1rem;
+  width: 3rem;
+  height: 3rem;
+  background-color: #E07A5F;
+  color: #fff;
+  border-radius: 3.125rem;
+  border: none;
 }
-.tweet-info-counts div {
-  display: flex;
-  margin-right: 20px;
+
+#fixedbutton:hover {
+  cursor: pointer;
+  background-color: #eba38f;
 }
-.tweet-info-counts div svg {
-  color: #657786;
-  margin-right: 10px;
-}
+
 @media screen and (max-width: 430px) {
-  body {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-  .tweet-header {
+  .card-header {
     flex-direction: column;
   }
-  .tweet-header img {
+
+  .card-header img {
     margin-bottom: 20px;
   }
-  .tweet-header-info p {
+
+  .card-header-info p {
     margin-bottom: 30px;
   }
-  .tweet-img-wrap {
+
+  .card-img-wrap {
     padding-left: 0;
-  }
-  .tweet-info-counts {
-    display: flex;
-    margin-left: 0;
-  }
-  .tweet-info-counts div {
-    margin-right: 10px;
   }
 }
