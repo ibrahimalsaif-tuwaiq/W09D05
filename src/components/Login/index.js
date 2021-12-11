@@ -1,21 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { userLogin } from "./../../reducers/Login";
 import "./style.css";
 
 const popupTools = require("popup-tools");
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const userStorage = localStorage.getItem("user");
-    setUser(JSON.parse(userStorage));
-  }, []);
+  const state = useSelector((state) => {
+    return {
+      token: state.Login.token,
+    };
+  });
 
   const login = async () => {
     setMessage("");
@@ -24,9 +27,9 @@ const Login = () => {
         identifier: identifier,
         password: password,
       });
-    //   dispatch(
-    //     userLogin({ role: res.data.result.role.role, token: res.data.token })
-    //   );
+      dispatch(
+        userLogin({ role: res.data.result.role.role, token: res.data.token })
+      );
       navigate("/");
     } catch (error) {
       setMessage(error.response.data.message);
@@ -42,12 +45,12 @@ const Login = () => {
         if (err) {
           console.log(err);
         } else {
-        //   dispatch(
-        //     userLogin({
-        //       role: user.result.role.role,
-        //       token: user.token,
-        //     })
-        //   );
+          dispatch(
+            userLogin({
+              role: user.result.role.role,
+              token: user.token,
+            })
+          );
           navigate("/");
         }
       }
@@ -56,7 +59,7 @@ const Login = () => {
 
   return (
     <div className="loginWrapper">
-      {user ? (
+      {state.token ? (
         <>
           <div className="centerWrapper">
             <div className="homeTitle">
@@ -98,7 +101,7 @@ const Login = () => {
               className="login-with-google-btn"
               onClick={googleLogin}
             >
-              Or Sign in with Google
+              Or Login with Google
             </button>
           </div>
           <div className="panel__half half--second">

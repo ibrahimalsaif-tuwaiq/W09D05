@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import PasswordChecklist from "react-password-checklist";
 import axios from "axios";
 import "./style.css";
@@ -10,12 +11,12 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const userStorage = localStorage.getItem("user");
-    setUser(JSON.parse(userStorage));
-  }, []);
+  const state = useSelector((state) => {
+    return {
+      token: state.Login.token,
+    };
+  });
 
   const signup = async () => {
     setMessage("");
@@ -34,11 +35,11 @@ const Signup = () => {
 
   return (
     <div className="signupWrapper">
-      {user ? (
+      {state.token ? (
         <h1>
           <div className="centerWrapper">
             <div className="homeSignupTitle">
-              <h1>You already loggedin, you don't need to signup</h1>
+              <p>You already loggedin, you don't need to signup</p>
             </div>
             <div className="homeSignupButtons">
               <button onClick={() => navigate("/")}>HOME</button>
