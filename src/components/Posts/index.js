@@ -16,6 +16,7 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [pageLoader, setPageLoader] = useState(true);
 
   const state = useSelector((state) => {
     return {
@@ -44,6 +45,7 @@ const Posts = () => {
       },
     });
     setPosts(res.data);
+    setPageLoader(false);
   };
 
   const handleUpload = (image) => {
@@ -67,7 +69,7 @@ const Posts = () => {
   };
 
   const getPostData = async () => {
-    const { value: file } = await MySwal.fire({
+    await MySwal.fire({
       title: "Add New Post",
       input: "file",
       inputLabel: "Chose your image or skip if you don't want an image",
@@ -80,25 +82,26 @@ const Posts = () => {
         accept: "image/*",
         "aria-label": "Upload your image",
       },
+    }).then(async (status) => {
+      if (status.isConfirmed && status.value) handleUpload(status.value);
+      if (status.isConfirmed) {
+        await MySwal.fire({
+          title: "Add New Post",
+          input: "textarea",
+          inputPlaceholder: "Type your description here...",
+          inputAttributes: {
+            "aria-label": "Type your description here",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Post",
+          confirmButtonColor: "#E07A5F",
+          cancelButtonText: "Cancel",
+          reverseButtons: true,
+        }).then((status) => {
+          if (status.isConfirmed && status.value) setDescription(status.value);
+        });
+      }
     });
-
-    if (file) handleUpload(file);
-
-    const { value: text } = await MySwal.fire({
-      title: "Add New Post",
-      input: "textarea",
-      inputPlaceholder: "Type your description here...",
-      inputAttributes: {
-        "aria-label": "Type your description here",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Post",
-      confirmButtonColor: "#E07A5F",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
-    });
-
-    if (text) setDescription(text);
   };
 
   const addPost = async () => {
@@ -122,31 +125,42 @@ const Posts = () => {
       {state.token ? (
         <>
           <Navbar />
-          <div className="cards">
-            {posts.map((post) => {
-              return (
-                <div className="card-wrap" key={post.post._id}>
-                  <div className="card-header">
-                    <img
-                      src={post.post.createdBy.avatar}
-                      alt={`${post.post.createdBy.username} avatar`}
-                      className="avatar"
-                    />
-                    <div className="card-header-info">
-                      {post.post.createdBy.username}
-                      <p>{post.post.description}</p>
+          {pageLoader ? (
+            <div className="loaderWrapper">
+              <div className="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            </div>
+          ) : (
+            <div className="cards">
+              {posts.map((post) => {
+                return (
+                  <div className="card-wrap" key={post.post._id}>
+                    <div className="card-header">
+                      <img
+                        src={post.post.createdBy.avatar}
+                        alt={`${post.post.createdBy.username} avatar`}
+                        className="avatar"
+                      />
+                      <div className="card-header-info">
+                        {post.post.createdBy.username}
+                        <p>{post.post.description}</p>
+                      </div>
                     </div>
+                    <button
+                      className="viewButton"
+                      onClick={() => navigate(`/posts/${post.post._id}`)}
+                    >
+                      VIEW
+                    </button>
                   </div>
-                  <button
-                    className="viewButton"
-                    onClick={() => navigate(`/posts/${post.post._id}`)}
-                  >
-                    VIEW
-                  </button>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
           <button id="fixedbutton" onClick={getPostData}>
             <AiOutlinePlus />
           </button>

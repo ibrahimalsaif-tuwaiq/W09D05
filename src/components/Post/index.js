@@ -22,6 +22,7 @@ const Post = () => {
   const [like, setLike] = useState(false);
   const [url, setUrl] = useState("");
   const [description, setDescription] = useState("");
+  const [pageLoader, setPageLoader] = useState(true);
   const { id } = useParams();
 
   const state = useSelector((state) => {
@@ -78,6 +79,7 @@ const Post = () => {
     if (res.data.likes.find((like) => like.createdBy === state.user._id)) {
       setLike(true);
     }
+    setPageLoader(false);
   };
 
   const likePost = async (likeType) => {
@@ -236,10 +238,10 @@ const Post = () => {
   };
 
   const getUpdatedPostData = async () => {
-    const { value: file } = await MySwal.fire({
-      title: "Update Post",
+    await MySwal.fire({
+      title: "Update Your Post",
       input: "file",
-      inputLabel: "Chose your image or skip if you don't want an image",
+      inputLabel: "Chose your image or skip if you don't to change the image",
       showCancelButton: true,
       confirmButtonText: "Next",
       confirmButtonColor: "#E07A5F",
@@ -249,25 +251,26 @@ const Post = () => {
         accept: "image/*",
         "aria-label": "Upload your image",
       },
+    }).then(async (status) => {
+      if (status.isConfirmed && status.value) handleUpload(status.value);
+      if (status.isConfirmed) {
+        await MySwal.fire({
+          title: "Update Your Post",
+          input: "textarea",
+          inputPlaceholder: "Type your new description here...",
+          inputAttributes: {
+            "aria-label": "Type your new description here",
+          },
+          showCancelButton: true,
+          confirmButtonText: "Post",
+          confirmButtonColor: "#E07A5F",
+          cancelButtonText: "Cancel",
+          reverseButtons: true,
+        }).then((status) => {
+          if (status.isConfirmed && status.value) setDescription(status.value);
+        });
+      }
     });
-
-    if (file) handleUpload(file);
-
-    const { value: text } = await MySwal.fire({
-      title: "Update Post",
-      input: "textarea",
-      inputPlaceholder: "Type your new description here...",
-      inputAttributes: {
-        "aria-label": "Type your new description here",
-      },
-      showCancelButton: true,
-      confirmButtonText: "Post",
-      confirmButtonColor: "#E07A5F",
-      cancelButtonText: "Cancel",
-      reverseButtons: true,
-    });
-
-    if (text) setDescription(text);
   };
 
   const updatePost = async () => {
@@ -275,7 +278,7 @@ const Post = () => {
       `${process.env.REACT_APP_BASE_URL}/posts/${id}`,
       {
         description: description,
-        image: url,
+        image: url ? url : post.post.image,
       },
       {
         headers: {
@@ -370,127 +373,140 @@ const Post = () => {
       {state.token ? (
         <>
           <Navbar />
-          {post && (
-            <div className="postWrapper">
-              <div className="postCard">
-                <div className="postOptions">
-                  {post.post.createdBy._id === state.user._id && (
-                    <div>
-                      <MdModeEditOutline
-                        className="editIcon"
-                        onClick={() => getUpdatedPostData()}
-                      />
-                      <MdDelete
-                        className="deleteIcon"
-                        onClick={() => deletePost()}
-                      />
-                    </div>
-                  )}
-                  {state.user.role.role === "admin" &&
-                  post.post.createdBy._id !== state.user._id ? (
-                    <div>
-                      <MdDelete
-                        className="deleteIcon"
-                        onClick={() => deletePostAdmin(post.post.createdBy._id)}
-                      />
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                {post.post.image && (
-                  <img
-                    src={post.post.image}
-                    alt={`${post.post.createdBy.username}`}
-                  ></img>
-                )}
-                <p className="postCaption">{post.post.description}</p>
-                <div className="postStatus">
-                  {like ? (
-                    <MdFavorite
-                      className="likeIcon"
-                      onClick={() => likePost(false)}
-                    />
-                  ) : (
-                    <MdFavorite
-                      className="unLikeIcon"
-                      onClick={() => likePost(true)}
-                    />
-                  )}
-                  <span>{post.likes.length}</span>
-                  <MdOutlineComment className="commentIcon" />
-                  <span>
-                    {typeof post.comments === "object"
-                      ? post.comments.length
-                      : 0}
-                  </span>
-                </div>
-                <h4 className="commentsTitle">Comments</h4>
-                <div className="shareCommentContainer">
-                  <div className="shareCommentUser">
-                    <img
-                      src={state.user.avatar}
-                      alt={`${state.user.username} avatar`}
-                    ></img>
-                    <p>{state.user.username}</p>
-                  </div>
-                  <textarea
-                    id="shareCommentText"
-                    placeholder="Write a comment.."
-                  ></textarea>
-                  <button className="shareCommentButton" onClick={addComment}>
-                    Share
-                  </button>
-                </div>
-                <ul className="commentsWrapper">
-                  {typeof post.comments === "object" &&
-                    post.comments.map((comment, index) => {
-                      return (
-                        <li className="commentBox" key={index}>
-                          <div className="commentBoxUser">
-                            <div className="userInfo">
-                              <img
-                                src={comment.createdBy.avatar}
-                                alt={`${comment.createdBy.username} avatar`}
-                              />
-                              <p>{comment.createdBy.username}</p>
-                            </div>
-                            {comment.createdBy._id === state.user._id && (
-                              <div className="userOption">
-                                <MdModeEditOutline
-                                  className="editIcon"
-                                  onClick={() => updateComment(comment._id)}
-                                />
-                                <MdDelete
-                                  className="deleteIcon"
-                                  onClick={() => deleteComment(comment._id)}
-                                />
-                              </div>
-                            )}
-                            {state.user.role.role === "admin" &&
-                            comment.createdBy._id !== state.user._id ? (
-                              <div className="adminOption">
-                                <MdDelete
-                                  className="deleteIcon"
-                                  onClick={() =>
-                                    deleteCommentAdmin(
-                                      comment._id,
-                                      comment.createdBy._id
-                                    )
-                                  }
-                                />
-                              </div>
-                            ) : (
-                              ""
-                            )}
-                          </div>
-                          <h6>{comment.description}</h6>
-                        </li>
-                      );
-                    })}
-                </ul>
+          {pageLoader ? (
+            <div className="loaderWrapper">
+              <div className="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
               </div>
             </div>
+          ) : (
+            post && (
+              <div className="postWrapper">
+                <div className="postCard">
+                  <div className="postOptions">
+                    {post.post.createdBy._id === state.user._id && (
+                      <div>
+                        <MdModeEditOutline
+                          className="editIcon"
+                          onClick={() => getUpdatedPostData()}
+                        />
+                        <MdDelete
+                          className="deleteIcon"
+                          onClick={() => deletePost()}
+                        />
+                      </div>
+                    )}
+                    {state.user.role.role === "admin" &&
+                    post.post.createdBy._id !== state.user._id ? (
+                      <div>
+                        <MdDelete
+                          className="deleteIcon"
+                          onClick={() =>
+                            deletePostAdmin(post.post.createdBy._id)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  {post.post.image && (
+                    <img
+                      src={post.post.image}
+                      alt={`${post.post.createdBy.username}`}
+                    ></img>
+                  )}
+                  <p className="postCaption">{post.post.description}</p>
+                  <div className="postStatus">
+                    {like ? (
+                      <MdFavorite
+                        className="likeIcon"
+                        onClick={() => likePost(false)}
+                      />
+                    ) : (
+                      <MdFavorite
+                        className="unLikeIcon"
+                        onClick={() => likePost(true)}
+                      />
+                    )}
+                    <span>{post.likes.length}</span>
+                    <MdOutlineComment className="commentIcon" />
+                    <span>
+                      {typeof post.comments === "object"
+                        ? post.comments.length
+                        : 0}
+                    </span>
+                  </div>
+                  <h4 className="commentsTitle">Comments</h4>
+                  <div className="shareCommentContainer">
+                    <div className="shareCommentUser">
+                      <img
+                        src={state.user.avatar}
+                        alt={`${state.user.username} avatar`}
+                      ></img>
+                      <p>{state.user.username}</p>
+                    </div>
+                    <textarea
+                      id="shareCommentText"
+                      placeholder="Write a comment.."
+                    ></textarea>
+                    <button className="shareCommentButton" onClick={addComment}>
+                      Share
+                    </button>
+                  </div>
+                  <ul className="commentsWrapper">
+                    {typeof post.comments === "object" &&
+                      post.comments.map((comment, index) => {
+                        return (
+                          <li className="commentBox" key={index}>
+                            <div className="commentBoxUser">
+                              <div className="userInfo">
+                                <img
+                                  src={comment.createdBy.avatar}
+                                  alt={`${comment.createdBy.username} avatar`}
+                                />
+                                <p>{comment.createdBy.username}</p>
+                              </div>
+                              {comment.createdBy._id === state.user._id && (
+                                <div className="userOption">
+                                  <MdModeEditOutline
+                                    className="editIcon"
+                                    onClick={() => updateComment(comment._id)}
+                                  />
+                                  <MdDelete
+                                    className="deleteIcon"
+                                    onClick={() => deleteComment(comment._id)}
+                                  />
+                                </div>
+                              )}
+                              {state.user.role.role === "admin" &&
+                              comment.createdBy._id !== state.user._id ? (
+                                <div className="adminOption">
+                                  <MdDelete
+                                    className="deleteIcon"
+                                    onClick={() =>
+                                      deleteCommentAdmin(
+                                        comment._id,
+                                        comment.createdBy._id
+                                      )
+                                    }
+                                  />
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                            <h6>{comment.description}</h6>
+                          </li>
+                        );
+                      })}
+                  </ul>
+                </div>
+              </div>
+            )
           )}
         </>
       ) : (

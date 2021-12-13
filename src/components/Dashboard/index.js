@@ -12,6 +12,7 @@ const MySwal = withReactContent(Swal);
 const Dashboard = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [pageLoader, setPageLoader] = useState(true);
 
   const state = useSelector((state) => {
     return {
@@ -31,6 +32,7 @@ const Dashboard = () => {
       },
     });
     setUsers(res.data);
+    setPageLoader(false);
   };
 
   const deleteUser = (id) => {
@@ -75,40 +77,51 @@ const Dashboard = () => {
       {state.token ? (
         <>
           <Navbar />
-          <div className="dashboardWrapper">
-            <div className="ItemsCon">
-              {users ? (
-                <ul className="list">
-                  {users.map((user) => (
-                    <div key={user._id} className="listItem">
-                      <li>{user.email}</li>
-                      <div>
-                        <button
-                          onClick={() => deleteUser(user._id)}
-                          className="delete"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </ul>
-              ) : (
-                <h2>There no users!!</h2>
-              )}
+          {pageLoader ? (
+            <div className="loaderWrapper">
+              <div className="lds-ring">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="dashboardWrapper">
+              <div className="ItemsCon">
+                {users ? (
+                  <ul className="list">
+                    {users.map((user) => (
+                      <div key={user._id} className="listItem">
+                        <li>{user.email}</li>
+                        <div>
+                          <button
+                            onClick={() => deleteUser(user._id)}
+                            className="delete"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </ul>
+                ) : (
+                  <h2>There no users!!</h2>
+                )}
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <div className="centerWrapper">
-        <div className="signupLoginTitle">
-          <h1>YOU HAVE TO LOGIN FIRST</h1>
+          <div className="signupLoginTitle">
+            <h1>YOU HAVE TO LOGIN FIRST</h1>
+          </div>
+          <div className="signupLoginButtons">
+            <button onClick={() => navigate("/login")}>Login</button>
+            <button onClick={() => navigate("/signup")}>Signup</button>
+          </div>
         </div>
-        <div className="signupLoginButtons">
-          <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/signup")}>Signup</button>
-        </div>
-      </div>
       )}
     </>
   );
