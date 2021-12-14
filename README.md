@@ -1,8 +1,8 @@
 # Social Media Website
 
-This is a a social media website built in Express.
+This is a a social media website with authentication and authorization using google built in Express, React, and MongoDB.
 
-heroku: https://social-media-project-frontend.herokuapp.com/
+Netlify: https://ibrahim-social-media-project.netlify.app
 
 While running locally: http://localhost:3000
 
@@ -99,6 +99,28 @@ npm start
 - VerifyTheAccount
 - VerifyFromEmail
 - ResetPassword
+
+## Wireframes
+
+### Posts page (main page)
+
+![posts](https://user-images.githubusercontent.com/92247874/145955269-ed3b3f66-cfdd-4b66-a64f-dd5650034fab.png)
+
+### Post page
+
+![post](https://user-images.githubusercontent.com/92247874/145955757-5bf51d36-e290-4009-8ab2-18c55384f3fe.png)
+
+### Dashboard page
+
+![dashboard](https://user-images.githubusercontent.com/92247874/145956700-d6f00c0e-5f6f-46d6-bce9-1478095ce7d4.png)
+
+### Login page
+
+![login](https://user-images.githubusercontent.com/92247874/145956778-76852195-e150-41ca-9dcf-83f479913d9d.png)
+
+### Signup page
+
+![signup](https://user-images.githubusercontent.com/92247874/145956827-39957c8e-2846-491c-9581-4b412171f41d.png)
 
 ## UML Diagram
 
